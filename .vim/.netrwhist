@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/apps/Modules/applications/cryosparc'
+let g:netrw_dirhist_2='/nobackup/earjo/AIS_PPE_control_ensemble/templates'
+let g:netrw_dirhist_3='/home/home01/earjbar/.apptainer'
+let g:netrw_dirhist_4='/home/home01/earjbar/.cache'
+let g:netrw_dirhist_5='/home/home01/earjbar/.ssh'
+let g:netrw_dirhist_6='/nobackup/earjo/AIS_PPE_control_ensemble/run001_control/run001_control_2lev_ref/GIAstats_relax'
+let g:netrw_dirhist_7='/nobackup/earjo/AIS_PPE_control_ensemble/copy'
