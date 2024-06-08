@@ -1,0 +1,11 @@
+.cache
+.lmod.d
+.ssh
+.subversion
+.vim
+.bash_history
+.bashrc
+.gitconfig
+.lesshst
+.viminfo
+.vimrc
