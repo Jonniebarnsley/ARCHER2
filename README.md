@@ -1,9 +1,12 @@
-ARC
+ARCHER2
 
-The Advanced Research Computing (ARC) system is a high performance computing facility based at the University of Leeds. This repo is a clone of my home directory on ARC, including useful scripts for running BISICLES and processing its outputs. Information on how to apply to ARC and how to use a HPC is available in the [ARC documentation](https://arcdocs.leeds.ac.uk/welcome.html).
+ARCHER2 is a high performance computing facility funded by the Natural Envrionemtn Research Council (NERC). This repo is a clone of my home directory on ARCHER2, including useful scripts for running BISICLES and processing its outputs. Information on how to apply to ARCHER2 and how to use a HPC is available in the [ARCHER2 documentation](https://docs.archer2.ac.uk/).
 
 ### items
 
-- `libs`: library of useful scripts
-- `bisicles.yml`: conda environment used when running BISICLES
-- `postprocessing.yml`: conda environment used for postprocessing of BISICLES outputs
+| Item | Description |
+|------|-----------------------------------------------------------------------------|
+|`libs`| Library of useful scripts for running BISICLES and processing its outputs   |
+|`data`| Basin masks used for postprocessing and summary csvs of the BISICLES ouputs |
+|`envs`| Python environments used for running BISICLES and processing its outputs    |
+|`templates`| Templates of various scripts used in running BISICLES                  |
