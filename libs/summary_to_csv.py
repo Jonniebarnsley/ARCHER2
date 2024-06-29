@@ -8,7 +8,6 @@ Usage: python summary_to_csv.py <path/to/summary.txt>
 '''
 
 import re
-import sys
 import argparse
 import numpy as np
 
@@ -22,18 +21,16 @@ def txt_to_df(txt: str, GIA: bool) -> DataFrame:
     input: Content of Aggregated GIAstats summary.txt file
     returns: dataframe of summary data with variables as headers
     '''
-
+    headers = ['time', 'iceVolumeAll', 'iceVolumeAbove', 'groundedArea', 'floatingArea', 
+               'totalArea', 'groundedPlusOpenLandArea', 'iceMassAll', 'iceMassAbove']
+    
+    # remaining headers depends on whether the summary was generated using the normal
+    # stats filetool or the GIAstats filetool that both come with BISICLES
     if GIA:
-        headers = [
-        'time', 'iceVolumeAll', 'iceVolumeAbove', 'groundedArea', 'floatingArea', 'totalArea',
-        'groundedPlusOpenLandArea', 'iceMassAll', 'iceMassAbove', 'bedrockBelowSeaLevel',
-        'total seawater volume', 'totalWaterVolume', 'totalWaterVolume2', 'bedrockBelowOcean']
+        headers += ['bedrockBelowSeaLevel', 'total seawater volume', 'totalWaterVolume', 
+                    'totalWaterVolume2', 'bedrockBelowOcean']
     else:
-        headers = [
-        'time', 'iceVolumeAll', 'iceVolumeAbove', 'groundedArea', 'floatingArea', 'totalArea',
-        'groundedPlusOpenLandArea', 'iceMassAll', 'iceMassAbove', 'Total Melt', 'Total SMB',
-        'Grounded SMB'
-        ]
+        headers += ['Total Melt', 'Total SMB', 'Grounded SMB']
 
     data: dict = {}
     for var in headers:
@@ -42,16 +39,16 @@ def txt_to_df(txt: str, GIA: bool) -> DataFrame:
     df = DataFrame(data)
 
     iVAbove = df['iceVolumeAbove']
+    iVAll = df['iceVolumeAll']
 
-    if GIA:
+    try:
         bBSL = df['bedrockBelowSeaLevel']
-        iVAll = df['iceVolumeAll']
-        SLC = Calculate_SLC(iVAbove, bBSL, iVAll, GIA=True)
-    else:
-        SLC = Calculate_SLC(iVAbove, GIA=False)
-    df['SLC'] = SLC
+    except KeyError:
+        print('No bedrockBelowSeaLevel found: using zeros')
+        bBSL = np.zeros(iVAbove.shape)
 
-    
+    SLC = Calculate_SLC(iVAbove, bBSL, iVAll, GIA=True)
+    df['SLC'] = SLC
     
     # fix issue with duplicate time values (see function below - probably unnecessary for most)
     df = fix_duplicate_time(df)
@@ -81,6 +78,7 @@ def fix_duplicate_time(df: DataFrame) -> DataFrame:
         df['time'] = fixed_time
 
     # trim runs that go over 10,000 years because of added time coords
+    # (10,000 years was the target length of the Pliocene/Control runs)
     df = df[df['time']<10_000]
 
     return df
