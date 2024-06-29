@@ -38,6 +38,7 @@ def txt_to_df(txt: str, GIA: bool) -> DataFrame:
         data[var] = list(map(float, timeseries))
     df = DataFrame(data)
 
+    # Calculate Sea level
     iVAbove = df['iceVolumeAbove']
     iVAll = df['iceVolumeAll']
 
@@ -47,7 +48,7 @@ def txt_to_df(txt: str, GIA: bool) -> DataFrame:
         print('No bedrockBelowSeaLevel found: using zeros')
         bBSL = np.zeros(iVAbove.shape)
 
-    SLC = Calculate_SLC(iVAbove, bBSL, iVAll, GIA=True)
+    SLC = Calculate_SLC(iVAbove, bBSL, iVAll)
     df['SLC'] = SLC
     
     # fix issue with duplicate time values (see function below - probably unnecessary for most)
