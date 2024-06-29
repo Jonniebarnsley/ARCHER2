@@ -30,15 +30,16 @@ def txt_to_df(txt: str) -> DataFrame:
     for var in headers:
         timeseries: list[str] = re.findall(f'{var} = (-?\d+\.\d+e[+-]\d+)', txt)
         data[var] = list(map(float, timeseries))
+    df = DataFrame(data)
 
-    iVAbove = data['iceVolumeAbove']
-    bBSL = data['bedrockBelowSeaLevel']
-    iVAll = data['iceVolumeAll']
+    iVAbove = df['iceVolumeAbove']
+    bBSL = df['bedrockBelowSeaLevel']
+    iVAll = df['iceVolumeAll']
 
     SLC = Calculate_SLC(iVAbove, bBSL, iVAll)
-    data['SLC'] = SLC
+    df['SLC'] = SLC
 
-    df = DataFrame(data)
+    
     
     # fix issue with duplicate time values (see function below - probably unnecessary for most)
     df = fix_duplicate_time(df)
