@@ -23,10 +23,17 @@ def txt_to_df(txt: str, GIA: bool) -> DataFrame:
     returns: dataframe of summary data with variables as headers
     '''
 
-    headers = [
-    'time', 'iceVolumeAll', 'iceVolumeAbove', 'groundedArea', 'floatingArea', 'totalArea',
-    'groundedPlusOpenLandArea', 'iceMassAll', 'iceMassAbove', 'bedrockBelowSeaLevel',
-    'total seawater volume', 'totalWaterVolume', 'totalWaterVolume2', 'bedrockBelowOcean']
+    if GIA:
+        headers = [
+        'time', 'iceVolumeAll', 'iceVolumeAbove', 'groundedArea', 'floatingArea', 'totalArea',
+        'groundedPlusOpenLandArea', 'iceMassAll', 'iceMassAbove', 'bedrockBelowSeaLevel',
+        'total seawater volume', 'totalWaterVolume', 'totalWaterVolume2', 'bedrockBelowOcean']
+    else:
+        headers = [
+        'time', 'iceVolumeAll', 'iceVolumeAbove', 'groundedArea', 'floatingArea', 'totalArea',
+        'groundedPlusOpenLandArea', 'iceMassAll', 'iceMassAbove', 'Total Melt', 'Total SMB',
+        'Grounded SMB'
+        ]
 
     data: dict = {}
     for var in headers:
@@ -35,10 +42,13 @@ def txt_to_df(txt: str, GIA: bool) -> DataFrame:
     df = DataFrame(data)
 
     iVAbove = df['iceVolumeAbove']
-    bBSL = df['bedrockBelowSeaLevel']
-    iVAll = df['iceVolumeAll']
 
-    SLC = Calculate_SLC(iVAbove, bBSL, iVAll, GIA=GIA)
+    if GIA:
+        bBSL = df['bedrockBelowSeaLevel']
+        iVAll = df['iceVolumeAll']
+        SLC = Calculate_SLC(iVAbove, bBSL, iVAll, GIA=True)
+    else:
+        SLC = Calculate_SLC(iVAbove, GIA=False)
     df['SLC'] = SLC
 
     
