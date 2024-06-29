@@ -1,6 +1,6 @@
-from numpy import array
+from numpy import array, zeros
 
-def Calculate_SLC(VAF: array, bBSL: array, TIV: array) -> array:
+def Calculate_SLC(VAF: array, bBSL: array = None, TIV: array = None, GIA: bool = True) -> array:
 
     '''
     Calculates sea level contribution from variables provided by GIAstats.
@@ -18,14 +18,17 @@ def Calculate_SLC(VAF: array, bBSL: array, TIV: array) -> array:
     rho_ocean = 1028    # density of seawater (kg m^-3)
     rho_ice = 918       # density of ice (kg m^-3)
 
+    # Sea level based on volume above floatation alone
     VAF_init = VAF[0]
-    bBSL_init = bBSL[0]
-    TIV_init = TIV[0]
+    SLC = -(VAF - VAF_init) * rho_ice / (rho_ocean * A_ocean)
 
-    SLC_af = -(VAF - VAF_init) * rho_ice / (rho_ocean * A_ocean)
-    SLC_pov = -(bBSL - bBSL_init) / A_ocean
-    SLC_den = -(TIV - TIV_init) * (rho_ice/1000 - rho_ice/rho_ocean) / A_ocean
-    
-    SLC = SLC_af + SLC_pov + SLC_den
+    # if GIA enabled, include effects due to potential ocean volume and density changes
+    if GIA:
+        bBSL_init = bBSL[0]
+        TIV_init = TIV[0]
+        SLC_pov = -(bBSL - bBSL_init) / A_ocean
+        SLC_den = -(TIV - TIV_init) * (rho_ice/1000 - rho_ice/rho_ocean) / A_ocean
+        
+        SLC += SLC_pov + SLC_den
     
     return SLC

@@ -9,12 +9,14 @@ Usage: python summary_to_csv.py <path/to/summary.txt>
 
 import re
 import sys
+import argparse
 import numpy as np
+
 from pandas import DataFrame
 from pathlib import Path
 from CalculateSLC import Calculate_SLC
 
-def txt_to_df(txt: str) -> DataFrame:
+def txt_to_df(txt: str, GIA: bool) -> DataFrame:
 
     '''
     input: Content of Aggregated GIAstats summary.txt file
@@ -36,7 +38,7 @@ def txt_to_df(txt: str) -> DataFrame:
     bBSL = df['bedrockBelowSeaLevel']
     iVAll = df['iceVolumeAll']
 
-    SLC = Calculate_SLC(iVAbove, bBSL, iVAll)
+    SLC = Calculate_SLC(iVAbove, bBSL, iVAll, GIA=GIA)
     df['SLC'] = SLC
 
     
@@ -74,7 +76,7 @@ def fix_duplicate_time(df: DataFrame) -> DataFrame:
     return df
 
 
-def main(filepath: str) -> None:
+def main(filepath: str, GIA: bool) -> None:
 
     '''
     Converts summary.txt file to a csv in the same directory
@@ -87,16 +89,19 @@ def main(filepath: str) -> None:
     try:
         content: str = path.read_text()
     except FileNotFoundError:
+        print(f'File not found: {filepath}')
         return
     
-    df: DataFrame = txt_to_df(content)
+    df: DataFrame = txt_to_df(content, GIA)
     csv_path: Path = path.with_suffix('.csv')
     df.to_csv(csv_path)
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        raise SystemExit('Usage: python summary_to_csv.py <path/to/summary.txt>')
-    else:
-        filepath = sys.argv[1]
-        main(filepath)
+
+    parser = argparse.ArgumentParser(description="Convert summary.txt to summary.csv with optional GIA correction.")
+    parser.add_argument('filepath', type=str, help='Path to summary.txt file')
+    parser.add_argument('--noGIA', action='store_false', help='Disable GIA correction')
+
+    args = parser.parse_args()
+    main(args.filepath, args.noGIA)
