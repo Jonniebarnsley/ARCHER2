@@ -117,4 +117,5 @@ if __name__ == '__main__':
     parser.add_argument('--noGIA', action='store_false', help='Disable GIA correction')
 
     args = parser.parse_args()
+    print(f'GIA is {args.noGIA}')
     main(args.filepath, args.noGIA)
