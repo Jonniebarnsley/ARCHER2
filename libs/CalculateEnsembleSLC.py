@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 from pathlib import Path
 from summary_to_csv import txt_to_df
-from CalculateSLC import Calculate_SLC
+from CalculateSLC import Goelzer_SLC
 
 def get_init_state(ensemble: Path, basin: str='AIS') -> pd.DataFrame:
 
@@ -73,7 +73,8 @@ def main(ensemble, basin):
         TIV = df['iceVolumeAll']
         
         # Calculate sea level contribution
-        SLC = Calculate_SLC(VAF, bBSL, TIV)
+        SLC_vaf, SLC_pov, SLC_den = Goelzer_SLC(VAF, bBSL, TIV)
+        SLC = SLC_vaf + SLC_pov + SLC_den
         data[run_num] = SLC
  
     # sort by run number and save to dataframe

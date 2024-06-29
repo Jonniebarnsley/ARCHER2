@@ -1,10 +1,11 @@
 from numpy import array
 
-def Calculate_SLC(iVAbove: array, bBSL: array, iVAll: array) -> array:
+def Goelzer_SLC(iVAbove: array, bBSL: array, iVAll: array) -> array:
 
     '''
-    Calculates sea level contribution from variables provided by GIAstats.
-    Follows Goelzer et al. (2020) https://doi.org/10.5194/tc-14-833-2020
+    Calculates sea level contribution from variables provided by the 
+    BISICLES GIAstats filetool. Follows Goelzer et al. (2020) 
+    https://doi.org/10.5194/tc-14-833-2020
 
     inputs: 
         - iVAbove: ice Volume Above (Floatation)
@@ -27,6 +28,4 @@ def Calculate_SLC(iVAbove: array, bBSL: array, iVAll: array) -> array:
     SLC_pov = -(bBSL - bBSL_init) / A_ocean
     SLC_den = -(iVAll - iVAll_init) * (rho_ice/1000 - rho_ice/rho_ocean) / A_ocean
 
-    SLC =  SLC_vaf + SLC_pov + SLC_den
-    
-    return SLC
+    return SLC_vaf, SLC_pov, SLC_den

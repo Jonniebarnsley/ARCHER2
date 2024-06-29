@@ -13,7 +13,7 @@ import numpy as np
 
 from pandas import DataFrame
 from pathlib import Path
-from CalculateSLC import Calculate_SLC
+from CalculateSLC import Goelzer_SLC
 
 def txt_to_df(txt: str, GIA: bool) -> DataFrame:
 
@@ -48,7 +48,11 @@ def txt_to_df(txt: str, GIA: bool) -> DataFrame:
         print('No bedrockBelowSeaLevel found: using zeros')
         bBSL = np.zeros(iVAbove.shape)
 
-    SLC = Calculate_SLC(iVAbove, bBSL, iVAll)
+    SLC_vaf, SLC_pov, SLC_den = Goelzer_SLC(iVAbove, bBSL, iVAll)
+    SLC = SLC_vaf + SLC_pov + SLC_den
+    df['SLC_vaf'] = SLC_vaf
+    df['SLC_pov'] = SLC_pov
+    df['SLC_den'] = SLC_den
     df['SLC'] = SLC
     
     # fix issue with duplicate time values (see function below - probably unnecessary for most)
