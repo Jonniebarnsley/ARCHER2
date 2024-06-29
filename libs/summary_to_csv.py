@@ -12,6 +12,7 @@ import sys
 import numpy as np
 from pandas import DataFrame
 from pathlib import Path
+from CalculateSLC import Calculate_SLC
 
 def txt_to_df(txt: str) -> DataFrame:
 
@@ -29,6 +30,14 @@ def txt_to_df(txt: str) -> DataFrame:
     for var in headers:
         timeseries: list[str] = re.findall(f'{var} = (-?\d+\.\d+e[+-]\d+)', txt)
         data[var] = list(map(float, timeseries))
+
+    iVAbove = data['iceVolumeAbove']
+    bBSL = data['bedrockBelowSeaLevel']
+    iVAll = data['iceVolumeAll']
+
+    SLC = Calculate_SLC(iVAbove, bBSL, iVAll)
+    data['SLC'] = SLC
+
     df = DataFrame(data)
     
     # fix issue with duplicate time values (see function below - probably unnecessary for most)
