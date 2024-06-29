@@ -2,7 +2,7 @@
 
 usage() { echo "Usage: $0 [-m <mask>] [-b <basin id>] <plotfile>" 1>&2; exit 1; }
 
-STATS="/nobackup/earjo/gia_stats_exec/gia-stats2d"
+STATS=/work/n02/shared/jonnieb/Bisicles/ocean_conn/code/filetools/gia-stats2d.Linux.64.CC.ftn.OPT.MPI.GNU.ex
 
 # handle options
 while getopts ":m:b:" option; do
