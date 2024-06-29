@@ -24,8 +24,12 @@ def Calculate_SLC(VAF: array, bBSL: array = None, TIV: array = None, GIA: bool =
 
     # if GIA enabled, include effects due to potential ocean volume and density changes
     if GIA:
-        bBSL_init = bBSL[0]
-        TIV_init = TIV[0]
+
+        try:
+            bBSL_init = bBSL[0]
+            TIV_init = TIV[0]
+        except ValueError:
+            print('SLC calculation failed because no inputs for bedrockBelowSeaLevel or iceVolumeAll')
         SLC_pov = -(bBSL - bBSL_init) / A_ocean
         SLC_den = -(TIV - TIV_init) * (rho_ice/1000 - rho_ice/rho_ocean) / A_ocean
         
